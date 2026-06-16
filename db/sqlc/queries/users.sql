@@ -15,7 +15,7 @@ UPDATE users
 SET name = $1,
     dob = $2,
     updated_at = NOW()
-WHERE id = $3;
+WHERE id = $3
 RETURNING *;
 
 -- name: DeleteUser :exec
