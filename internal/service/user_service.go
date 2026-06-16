@@ -38,13 +38,15 @@ func (s *UserService) CreateUser(ctx context.Context, req models.CreateUserReque
 	}
 
 	// Prepare params for repository (pgtype.Date)
-	var dob pgtype.Date
-	dob.Time = dobTime
+	dob := pgtype.Date{
+    Time:  dobTime,
+    Valid: true,
+}
 
 	arg := generated.CreateUserParams{
-		Name: req.Name,
-		Dob:  dob,
-	}
+    Name: req.Name,
+    Dob:  dob,
+}
 
 	id, err := s.repo.CreateUser(ctx, arg)
 	if err != nil {
@@ -80,14 +82,16 @@ func (s *UserService) UpdateUser(ctx context.Context, id int32, req models.Updat
 		return models.UserResponse{}, errors.New("dob cannot be in the future")
 	}
 
-	var dob pgtype.Date
-	dob.Time = dobTime
+	dob := pgtype.Date{
+    Time:  dobTime,
+    Valid: true,
+}
 
-	arg := generated.UpdateUserParams{
-		Name: req.Name,
-		Dob:  dob,
-		ID:   id,
-	}
+arg := generated.UpdateUserParams{
+    Name: req.Name,
+    Dob:  dob,
+    ID:   id,
+}
 
 	user, err := s.repo.UpdateUser(ctx, arg)
 	if err != nil {
