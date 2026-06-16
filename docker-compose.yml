@@ -1,24 +1,22 @@
-version: '3.8'
-
 services:
-  db:
+  postgres:
     image: postgres:16
-    container_name: postgres16
+    restart: always
     environment:
-      - POSTGRES_DB=userdb
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: userdb
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
 
 volumes:
-  pgdata:
-    driver: local
+  postgres_data:
